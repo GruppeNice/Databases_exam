@@ -1,14 +1,10 @@
 package com.example.hospital_db_backend.model.mysql;
 
 import com.example.hospital_db_backend.model.entity_bases.NurseBase;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -18,6 +14,6 @@ import java.util.UUID;
 public class Nurse extends NurseBase {
     @Id
     private UUID hospitalId;
-    @ManyToMany
-    private Set<Ward> wards;
+    @ManyToOne
+    private Ward ward;
 }
