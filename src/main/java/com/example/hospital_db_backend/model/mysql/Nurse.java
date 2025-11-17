@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "nurses")
 public class Nurse extends NurseBase {
     @Id
-    private UUID hospitalId;
+    private UUID nurseId;
     @ManyToMany
     private Set<Ward> wards;
 }
