@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "nurses")
 public class Nurse extends NurseBase {
     @Id
-    private UUID hospitalId;
+    private UUID nurseId;
     @ManyToOne
     private Ward ward;
 }

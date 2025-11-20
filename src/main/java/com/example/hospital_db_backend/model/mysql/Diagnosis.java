@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -15,8 +14,6 @@ import java.util.UUID;
 public class Diagnosis extends DiagnosisBase {
     @Id
     private UUID diagnosisId;
-    @ManyToMany
-    private Set<Patient> patients;
     @ManyToOne
     private Doctor doctor;
 }

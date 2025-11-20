@@ -1,10 +1,7 @@
 package com.example.hospital_db_backend.model.mysql;
 
 import com.example.hospital_db_backend.model.entity_bases.AppointmentBase;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 

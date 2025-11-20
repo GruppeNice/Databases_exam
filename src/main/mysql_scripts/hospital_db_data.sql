@@ -1,59 +1,61 @@
--- Hospitals
-insert into hospitals (hospital_name, address, city) values
-                                                         ('Saint Mary Hospital', '123 Main St', 'Springfield'),
-                                                         ('General Health Clinic', '45 Elm St', 'Rivertown');
+INSERT INTO hospitals (hospital_id, address, city, hospital_name) VALUES
+                                                                      (0x11111111111111111111111111111111, '123 Main St', 'Springfield', 'Springfield General Hospital'),
+                                                                      (0x22222222222222222222222222222222, '45 West Ave', 'Shelbyville', 'Shelbyville Medical Center');
+INSERT INTO medications (medication_id, dosage, medication_name) VALUES
+                                                                     (0xAAAA1111111111111111111111111111, '10mg', 'Ibuprofen'),
+                                                                     (0xAAAA2222222222222222222222222222, '500mg', 'Amoxicillin');
+INSERT INTO wards (ward_id, max_capacity, type) VALUES
+                                                    (0x33333333333333333333333333333333, 20, 'NEUROLOGY'), -- General ward
+                                                    (0x44444444444444444444444444444444, 10, 'CARDIOLOGY'); -- ICU
+INSERT INTO doctors (doctor_id, doctor_name, speciality, ward_ward_id) VALUES
+                                                                           (0x55555555555555555555555555555555, 'Dr. Alice Carter', 1, 0x33333333333333333333333333333333),
+                                                                           (0x66666666666666666666666666666666, 'Dr. Bob Hayes', 2, 0x44444444444444444444444444444444);
+INSERT INTO diagnosis (diagnosis_id, diagnosis_date, description, doctor_doctor_id) VALUES
+                                                                                        (0x77777777777777777777777777777777, '2023-10-10', 'Seasonal flu', 0x55555555555555555555555555555555),
+                                                                                        (0x88888888888888888888888888888888, '2023-11-05', 'Bronchitis', 0x66666666666666666666666666666666);
+INSERT INTO nurses (nurse_id, nurse_name, speciality, ward_ward_id) VALUES
+                                                                           (0x99999999999999999999999999999999, 'Nurse Maria Lopez', 'EMERGENCY', 0x33333333333333333333333333333333),
+                                                                           (0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA, 'Nurse John Smith', 'EMERGENCY', 0x44444444444444444444444444444444);
+INSERT INTO patients (patient_id, patient_name, gender, date_of_birth, ward_ward_id, hospital_hospital_id) VALUES
+                                                                                                               (0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB, 'Tom Walker', 'Male', '1990-04-12', 0x33333333333333333333333333333333, 0x11111111111111111111111111111111),
+                                                                                                               (0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC, 'Sarah Brown', 'Female', '1985-08-21', 0x44444444444444444444444444444444, 0x22222222222222222222222222222222);
+INSERT INTO appointments
+(appointment_id, appointment_date, status, reason, doctor_doctor_id, nurse_nurse_id, patient_patient_id)
+VALUES
+    (0xDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD, '2023-12-01', 'COMPLETED', 'Routine checkup',
+     0x55555555555555555555555555555555,
+     0x99999999999999999999999999999999,
+     0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB),
 
--- Wards
-insert into wards (ward_name, hospital_id, max_capacity) values
-                                                         ('Cardiology', 1, 30),
-                                                         ('Neurology', 1, 25),
-                                                         ('General Medicine', 2, 20);
+    (0xEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE, '2023-12-15', 'SCHEDULED', 'Follow-up visit',
+     0x66666666666666666666666666666666,
+     0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA,
+     0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC);
+INSERT INTO patients_diagnosis (diagnosis_diagnosis_id, patient_patient_id) VALUES
+                                                                                 (0x77777777777777777777777777777777, 0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB),
+                                                                                 (0x88888888888888888888888888888888, 0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC);
+INSERT INTO prescriptions
+(prescription_id, start_date, end_date, doctor_doctor_id, medication_medication_id, patient_patient_id)
+VALUES
+    (0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF, '2023-12-02', '2023-12-12',
+     0x55555555555555555555555555555555,
+     0xAAAA1111111111111111111111111111,
+     0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB),
 
--- Patients
-insert into patients (patient_name, date_of_birth, ward_id, hospital_id) values
-                                                                             ('Alice Johnson', '1985-04-12', 1, 1),
-                                                                             ('Bob Smith', '1990-07-23', 2, 1),
-                                                                             ('Charlie Brown', '2010-02-15', 3, 2);
+    (0x12121212121212121212121212121212, '2023-12-16', '2023-12-26',
+     0x66666666666666666666666666666666,
+     0xAAAA2222222222222222222222222222,
+     0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC);
+INSERT INTO surgeries
+(surgery_id, surgery_date, description, doctor_doctor_id, patient_patient_id)
+VALUES
+    (0xABABABABABABABABABABABABABABABAB, '2024-01-10', 'Appendectomy',
+     0x55555555555555555555555555555555,
+     0xBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB),
 
--- Doctors
-insert into doctors (doctor_name, specialty, ward_id) values
-                                                          ('Dr. Emily Carter', 'Cardiology', 1),
-                                                          ('Dr. James Wilson', 'Neurology', 2),
-                                                          ('Dr. Sarah Lee', 'Surgery', 3);
-
--- Nurses
-insert into nurses (nurse_name, ward_id, specialty) values
-                                             ('Nurse Anna White', 1, 'Emergency'),
-                                             ('Nurse Tom Green', 2, 'ICU'),
-                                             ('Nurse Lis
-a Black', 3, 'General Care');
-
--- Appointments
-insert into appointments (patient_id, doctor_id, nurse_id, appointment_date, reason, status) values
-                                                                                         (1, 1, 1, '2025-10-10 09:00:00', 'Routine check-up', 'Scheduled'),
-                                                                                         (2, 2, 2, '2025-10-11 14:30:00', 'Migraine consultation', 'Scheduled'),
-                                                                                         (3, 3, 3, '2025-10-12 11:00:00', 'Child fever follow-up', 'Scheduled');
-
-
--- Medications
-insert into medications (medication_name, dosage) values
-                                                      ('Aspirin', '100mg'),
-                                                      ('Amoxicillin', '500mg'),
-                                                      ('Paracetamol', '250mg');
-
--- Prescriptions
-insert into prescriptions (patient_id, doctor_id, medication_id, start_date, end_date) values
-                                                                                           (1, 1, 1, '2025-09-01', '2025-09-15'),
-                                                                                           (2, 2, 2, '2025-09-05', '2025-09-20'),
-                                                                                           (3, 3, 3, '2025-09-08', null);
-
--- Diagnosis
-insert into diagnosis (patient_id, doctor_id, diagnosis_date, description) values
-                                                                               (1, 1, '2025-09-01', 'Hypertension'),
-                                                                               (2, 2, '2025-09-05', 'Chronic migraine'),
-                                                                               (3, 3, '2025-09-08', 'Viral infection');
-
--- Surgeries
-insert into surgeries (patient_id, doctor_id, surgery_date, description) values
-                                                                             (1, 1, '2025-09-02 10:00:00', 'Angioplasty'),
-                                                                             (2, 2, '2025-09-06 13:00:00', 'Brain MRI (minor invasive procedure)');
+    (0xCDCDCDCDCDCDCDCDCDCDCDCDCDCDCDCD, '2024-02-02', 'Gallbladder removal',
+     0x66666666666666666666666666666666,
+     0xCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC);
+INSERT INTO hospitals_wards (hospital_hospital_id, wards_ward_id) VALUES
+                                                                      (0x11111111111111111111111111111111, 0x33333333333333333333333333333333),
+                                                                      (0x22222222222222222222222222222222, 0x44444444444444444444444444444444);
