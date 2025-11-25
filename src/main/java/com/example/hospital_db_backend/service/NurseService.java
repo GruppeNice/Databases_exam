@@ -7,6 +7,7 @@ import com.example.hospital_db_backend.exception.EntityNotFoundException;
 import com.example.hospital_db_backend.repository.NurseRepository;
 import com.example.hospital_db_backend.repository.WardRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -32,6 +33,7 @@ public class NurseService {
                 .orElseThrow(() -> new EntityNotFoundException("Nurse not found"));
     }
 
+    @Transactional
     public Nurse createNurse(NurseRequest request) {
         Nurse nurse = new Nurse();
         nurse.setNurseId(UUID.randomUUID());
@@ -48,6 +50,7 @@ public class NurseService {
         return nurseRepository.save(nurse);
     }
 
+    @Transactional
     public Nurse updateNurse(UUID id, NurseRequest request) {
         UUID nurseId = Objects.requireNonNull(id, "Nurse ID cannot be null");
         Nurse nurse = nurseRepository.findById(nurseId)
@@ -66,6 +69,7 @@ public class NurseService {
         return nurseRepository.save(nurse);
     }
 
+    @Transactional
     public void deleteNurse(UUID id) {
         UUID nurseId = Objects.requireNonNull(id, "Nurse ID cannot be null");
         if (!nurseRepository.existsById(nurseId)) {

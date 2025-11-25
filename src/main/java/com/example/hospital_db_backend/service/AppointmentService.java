@@ -11,6 +11,7 @@ import com.example.hospital_db_backend.repository.DoctorRepository;
 import com.example.hospital_db_backend.repository.NurseRepository;
 import com.example.hospital_db_backend.repository.PatientRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +44,7 @@ public class AppointmentService {
                 .orElseThrow(() -> new EntityNotFoundException("Appointment not found"));
     }
 
+    @Transactional
     public Appointment createAppointment(AppointmentRequest request) {
         Appointment appointment = new Appointment();
         appointment.setAppointmentId(UUID.randomUUID());
@@ -74,6 +76,7 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    @Transactional
     public Appointment updateAppointment(UUID id, AppointmentRequest request) {
         UUID appointmentId = Objects.requireNonNull(id, "Appointment ID cannot be null");
         Appointment appointment = appointmentRepository.findById(appointmentId)
@@ -107,6 +110,7 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    @Transactional
     public void deleteAppointment(UUID id) {
         UUID appointmentId = Objects.requireNonNull(id, "Appointment ID cannot be null");
         if (!appointmentRepository.existsById(appointmentId)) {

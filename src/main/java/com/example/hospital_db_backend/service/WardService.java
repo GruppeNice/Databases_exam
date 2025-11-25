@@ -7,6 +7,7 @@ import com.example.hospital_db_backend.exception.EntityNotFoundException;
 import com.example.hospital_db_backend.repository.HospitalRepository;
 import com.example.hospital_db_backend.repository.WardRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +35,7 @@ public class WardService {
                 .orElseThrow(() -> new EntityNotFoundException("Ward not found"));
     }
 
+    @Transactional
     public Ward createWard(WardRequest request) {
         Ward ward = new Ward();
         ward.setWardId(UUID.randomUUID());
@@ -54,6 +56,7 @@ public class WardService {
         return wardRepository.save(ward);
     }
 
+    @Transactional
     public Ward updateWard(UUID id, WardRequest request) {
         UUID wardId = Objects.requireNonNull(id, "Ward ID cannot be null");
         Ward ward = wardRepository.findById(wardId)
@@ -76,6 +79,7 @@ public class WardService {
         return wardRepository.save(ward);
     }
 
+    @Transactional
     public void deleteWard(UUID id) {
         UUID wardId = Objects.requireNonNull(id, "Ward ID cannot be null");
         if (!wardRepository.existsById(wardId)) {

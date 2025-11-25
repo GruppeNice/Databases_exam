@@ -11,6 +11,7 @@ import com.example.hospital_db_backend.repository.MedicationRepository;
 import com.example.hospital_db_backend.repository.PatientRepository;
 import com.example.hospital_db_backend.repository.PrescriptionRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +44,7 @@ public class PrescriptionService {
                 .orElseThrow(() -> new EntityNotFoundException("Prescription not found"));
     }
 
+    @Transactional
     public Prescription createPrescription(PrescriptionRequest request) {
         Prescription prescription = new Prescription();
         prescription.setPrescriptionId(UUID.randomUUID());
@@ -73,6 +75,7 @@ public class PrescriptionService {
         return prescriptionRepository.save(prescription);
     }
 
+    @Transactional
     public Prescription updatePrescription(UUID id, PrescriptionRequest request) {
         UUID prescriptionId = Objects.requireNonNull(id, "Prescription ID cannot be null");
         Prescription prescription = prescriptionRepository.findById(prescriptionId)
@@ -105,6 +108,7 @@ public class PrescriptionService {
         return prescriptionRepository.save(prescription);
     }
 
+    @Transactional
     public void deletePrescription(UUID id) {
         UUID prescriptionId = Objects.requireNonNull(id, "Prescription ID cannot be null");
         if (!prescriptionRepository.existsById(prescriptionId)) {

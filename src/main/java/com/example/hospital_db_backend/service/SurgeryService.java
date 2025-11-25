@@ -9,6 +9,7 @@ import com.example.hospital_db_backend.repository.DoctorRepository;
 import com.example.hospital_db_backend.repository.PatientRepository;
 import com.example.hospital_db_backend.repository.SurgeryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -38,6 +39,7 @@ public class SurgeryService {
                 .orElseThrow(() -> new EntityNotFoundException("Surgery not found"));
     }
 
+    @Transactional
     public Surgery createSurgery(SurgeryRequest request) {
         Surgery surgery = new Surgery();
         surgery.setSurgeryId(UUID.randomUUID());
@@ -61,6 +63,7 @@ public class SurgeryService {
         return surgeryRepository.save(surgery);
     }
 
+    @Transactional
     public Surgery updateSurgery(UUID id, SurgeryRequest request) {
         UUID surgeryId = Objects.requireNonNull(id, "Surgery ID cannot be null");
         Surgery surgery = surgeryRepository.findById(surgeryId)
@@ -86,6 +89,7 @@ public class SurgeryService {
         return surgeryRepository.save(surgery);
     }
 
+    @Transactional
     public void deleteSurgery(UUID id) {
         UUID surgeryId = Objects.requireNonNull(id, "Surgery ID cannot be null");
         if (!surgeryRepository.existsById(surgeryId)) {

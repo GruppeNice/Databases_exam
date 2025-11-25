@@ -5,6 +5,7 @@ import com.example.hospital_db_backend.model.mysql.Medication;
 import com.example.hospital_db_backend.exception.EntityNotFoundException;
 import com.example.hospital_db_backend.repository.MedicationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +29,7 @@ public class MedicationService {
                 .orElseThrow(() -> new EntityNotFoundException("Medication not found"));
     }
 
+    @Transactional
     public Medication createMedication(MedicationRequest request) {
         Medication medication = new Medication();
         medication.setMedicationId(UUID.randomUUID());
@@ -37,6 +39,7 @@ public class MedicationService {
         return medicationRepository.save(medication);
     }
 
+    @Transactional
     public Medication updateMedication(UUID id, MedicationRequest request) {
         UUID medicationId = Objects.requireNonNull(id, "Medication ID cannot be null");
         Medication medication = medicationRepository.findById(medicationId)
@@ -48,6 +51,7 @@ public class MedicationService {
         return medicationRepository.save(medication);
     }
 
+    @Transactional
     public void deleteMedication(UUID id) {
         UUID medicationId = Objects.requireNonNull(id, "Medication ID cannot be null");
         if (!medicationRepository.existsById(medicationId)) {

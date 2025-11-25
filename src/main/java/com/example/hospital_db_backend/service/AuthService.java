@@ -11,6 +11,7 @@ import com.example.hospital_db_backend.exception.ValidationException;
 import com.example.hospital_db_backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -39,6 +40,7 @@ public class AuthService {
         return new LoginResponse(token, user.getRole().name());
     }
 
+    @Transactional
     public User register(RegisterRequest registerRequest) {
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
             throw new ValidationException("Username already exists");
