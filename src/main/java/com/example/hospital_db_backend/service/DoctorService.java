@@ -29,7 +29,7 @@ public class DoctorService {
 
     public Doctor getDoctorById(UUID id) {
         UUID doctorId = Objects.requireNonNull(id, "Doctor ID cannot be null");
-        return doctorRepository.findById(doctorId)
+        return doctorRepository.findByIdWithWardAndHospitals(doctorId)
                 .orElseThrow(() -> new EntityNotFoundException("Doctor not found"));
     }
 

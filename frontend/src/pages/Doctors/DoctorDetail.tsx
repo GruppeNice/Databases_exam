@@ -93,12 +93,32 @@ export const DoctorDetail: React.FC = () => {
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{doctor.speciality}</dd>
             </div>
             {doctor.ward && (
-              <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Ward</dt>
-                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {doctor.ward.type} Ward (ID: {doctor.ward.wardId})
-                </dd>
-              </div>
+              <>
+                <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                  <dt className="text-sm font-medium text-gray-500">Ward</dt>
+                  <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                    <Link to={`/wards/${doctor.ward.wardId}`} className="text-blue-600 hover:text-blue-800">
+                      {doctor.ward.type} Ward
+                    </Link>
+                  </dd>
+                </div>
+                {doctor.ward.hospitals && doctor.ward.hospitals.length > 0 && (
+                  <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                    <dt className="text-sm font-medium text-gray-500">Hospital</dt>
+                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                      <ul className="list-disc list-inside">
+                        {doctor.ward.hospitals.map((hospital) => (
+                          <li key={hospital.hospitalId}>
+                            <Link to={`/hospitals/${hospital.hospitalId}`} className="text-blue-600 hover:text-blue-800">
+                              {hospital.hospitalName} - {hospital.city}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                )}
+              </>
             )}
           </dl>
         </div>

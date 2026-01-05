@@ -17,6 +17,6 @@ public class Ward extends WardBase {
     @Id
     private UUID wardId;
     @ManyToMany
-    @JsonIgnoreProperties("hospitals")
+    @JsonIgnoreProperties({"wards"}) // Ignore the circular reference, but include hospitals
     private Set<Hospital> hospitals;
 }

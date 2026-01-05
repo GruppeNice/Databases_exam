@@ -1,6 +1,7 @@
 package com.example.hospital_db_backend.model.mysql;
 
 import com.example.hospital_db_backend.model.entity_bases.DiagnosisBase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Diagnosis extends DiagnosisBase {
     private UUID diagnosisId;
     
     @ManyToMany
+    @JsonIgnore
     private Set<Patient> patients;
     
     @ManyToOne

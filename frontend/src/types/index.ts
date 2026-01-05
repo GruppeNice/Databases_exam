@@ -118,6 +118,21 @@ export interface Nurse {
   nurseName: string;
 }
 
+export interface Surgery {
+  surgeryId: string;
+  surgeryDate: string; // ISO date string
+  description: string;
+  patient?: Patient;
+  doctor?: Doctor;
+}
+
+export interface SurgeryRequest {
+  surgeryDate: string; // ISO date string (YYYY-MM-DD)
+  description: string;
+  patientId?: string;
+  doctorId?: string;
+}
+
 export interface User {
   userId: string;
   username: string;

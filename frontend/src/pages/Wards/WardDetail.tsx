@@ -99,7 +99,9 @@ export const WardDetail: React.FC = () => {
                   <ul className="list-disc list-inside">
                     {ward.hospitals.map((hospital) => (
                       <li key={hospital.hospitalId}>
-                        {hospital.hospitalName} - {hospital.city}
+                        <Link to={`/hospitals/${hospital.hospitalId}`} className="text-blue-600 hover:text-blue-800">
+                          {hospital.hospitalName} - {hospital.city}
+                        </Link>
                       </li>
                     ))}
                   </ul>

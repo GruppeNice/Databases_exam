@@ -30,7 +30,7 @@ public class WardService {
 
     public Ward getWardById(UUID id) {
         UUID wardId = Objects.requireNonNull(id, "Ward ID cannot be null");
-        return wardRepository.findById(wardId)
+        return wardRepository.findByIdWithHospitals(wardId)
                 .orElseThrow(() -> new EntityNotFoundException("Ward not found"));
     }
 

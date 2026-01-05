@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { patientService } from '../services/patientService';
 import { doctorService } from '../services/doctorService';
-import { appointmentService } from '../services/appointmentService';
+import { nurseService } from '../services/nurseService';
+import { surgeryService } from '../services/surgeryService';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,7 +11,8 @@ export const Dashboard: React.FC = () => {
   const [stats, setStats] = useState({
     patients: 0,
     doctors: 0,
-    appointments: 0,
+    nurses: 0,
+    surgeries: 0,
     loading: true
   });
   const { role } = useAuth();
@@ -22,15 +24,24 @@ export const Dashboard: React.FC = () => {
 
   const loadStats = async () => {
     try {
-      const [patients, doctors, appointments] = await Promise.all([
+      const [patients, doctors, nurses, surgeries] = await Promise.all([
         patientService.getAll(),
         doctorService.getAll(),
-        appointmentService.getAll()
+        nurseService.getAll(),
+        surgeryService.getAll()
       ]);
+      
+      // Ensure arrays exist and are valid
+      const patientsArray = Array.isArray(patients) ? patients : [];
+      const doctorsArray = Array.isArray(doctors) ? doctors : [];
+      const nursesArray = Array.isArray(nurses) ? nurses : [];
+      const surgeriesArray = Array.isArray(surgeries) ? surgeries : [];
+      
       setStats({
-        patients: patients.length,
-        doctors: doctors.length,
-        appointments: appointments.length,
+        patients: patientsArray.length,
+        doctors: doctorsArray.length,
+        nurses: nursesArray.length,
+        surgeries: surgeriesArray.length,
         loading: false
       });
     } catch (error) {
@@ -50,7 +61,7 @@ export const Dashboard: React.FC = () => {
     <div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -106,21 +117,46 @@ export const Dashboard: React.FC = () => {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Appointments</dt>
-                  <dd className="text-lg font-medium text-gray-900">{stats.appointments}</dd>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Total Nurses</dt>
+                  <dd className="text-lg font-medium text-gray-900">{stats.nurses}</dd>
                 </dl>
               </div>
             </div>
           </div>
           <div className="bg-gray-50 px-5 py-3">
             <div className="text-sm">
-              <Link to="/appointments" className="font-medium text-blue-600 hover:text-blue-800">
-                View all appointments
+              <Link to="/nurses" className="font-medium text-blue-600 hover:text-blue-800">
+                View all nurses
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="p-5">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <svg className="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <div className="ml-5 w-0 flex-1">
+                <dl>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Total Surgeries</dt>
+                  <dd className="text-lg font-medium text-gray-900">{stats.surgeries}</dd>
+                </dl>
+              </div>
+            </div>
+          </div>
+          <div className="bg-gray-50 px-5 py-3">
+            <div className="text-sm">
+              <Link to="/surgeries" className="font-medium text-blue-600 hover:text-blue-800">
+                View all surgeries
               </Link>
             </div>
           </div>

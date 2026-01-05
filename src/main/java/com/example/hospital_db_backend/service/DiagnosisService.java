@@ -6,7 +6,6 @@ import com.example.hospital_db_backend.model.mysql.Doctor;
 import com.example.hospital_db_backend.exception.EntityNotFoundException;
 import com.example.hospital_db_backend.repository.DiagnosisRepository;
 import com.example.hospital_db_backend.repository.DoctorRepository;
-import com.example.hospital_db_backend.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

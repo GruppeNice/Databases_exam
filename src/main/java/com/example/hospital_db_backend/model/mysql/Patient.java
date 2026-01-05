@@ -1,6 +1,7 @@
 package com.example.hospital_db_backend.model.mysql;
 
 import com.example.hospital_db_backend.model.entity_bases.PatientBase;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +26,9 @@ public class Patient extends PatientBase {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Hospital hospital;
+    
     @ManyToMany
+    @JsonIgnore
     private Set<Diagnosis> diagnosis;
 
 }

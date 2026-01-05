@@ -1,6 +1,7 @@
 package com.example.hospital_db_backend.model.mysql;
 
 import com.example.hospital_db_backend.model.entity_bases.HospitalBase;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
@@ -19,5 +20,6 @@ public class Hospital extends HospitalBase {
     @Id
     private UUID hospitalId;
     @ManyToMany
+    @JsonIgnoreProperties({"hospitals"}) // Ignore the circular reference, but include wards
     private Set<Ward> wards;
 }

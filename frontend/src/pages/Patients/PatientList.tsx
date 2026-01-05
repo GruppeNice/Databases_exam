@@ -23,10 +23,13 @@ export const PatientList: React.FC = () => {
     try {
       setLoading(true);
       const data = await patientService.getAll();
-      setPatients(data);
+      // Ensure data is an array
+      const patientsArray = Array.isArray(data) ? data : [];
+      setPatients(patientsArray);
       setError(null);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load patients');
+      setPatients([]); // Set empty array on error
     } finally {
       setLoading(false);
     }
