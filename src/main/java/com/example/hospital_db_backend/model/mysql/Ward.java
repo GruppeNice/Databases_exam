@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Ward extends WardBase {
     @Id
     private UUID wardId;
-    @ManyToMany
+    @ManyToMany(mappedBy = "wards")
     @JsonIgnoreProperties({"wards"}) // Ignore the circular reference, but include hospitals
     private Set<Hospital> hospitals;
 }

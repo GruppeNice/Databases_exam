@@ -27,7 +27,7 @@ public class Patient extends PatientBase {
     @JoinColumn(nullable = false)
     private Hospital hospital;
     
-    @ManyToMany
+    @ManyToMany(mappedBy = "patients")
     @JsonIgnore
     private Set<Diagnosis> diagnosis;
 
