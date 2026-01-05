@@ -21,7 +21,7 @@ public class Diagnosis extends DiagnosisBase {
     @Id
     private UUID diagnosisId;
     
-    @ManyToMany
+    @ManyToMany(mappedBy = "diagnosis")
     @JsonIgnore
     private Set<Patient> patients;
     

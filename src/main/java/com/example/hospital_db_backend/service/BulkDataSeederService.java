@@ -22,6 +22,8 @@ public class BulkDataSeederService {
     private final MedicationRepository medicationRepository;
     private final PrescriptionRepository prescriptionRepository;
     private final SurgeryRepository surgeryRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final Random random = new Random();
 
     // Danish cities for realistic data
     private static final String[] CITIES = {
@@ -59,7 +61,7 @@ public class BulkDataSeederService {
             DiagnosisRepository diagnosisRepository,
             MedicationRepository medicationRepository,
             PrescriptionRepository prescriptionRepository,
-            SurgeryRepository surgeryRepository) {
+            SurgeryRepository surgeryRepository, AppointmentRepository appointmentRepository) {
         this.hospitalRepository = hospitalRepository;
         this.wardRepository = wardRepository;
         this.patientRepository = patientRepository;
@@ -69,6 +71,7 @@ public class BulkDataSeederService {
         this.medicationRepository = medicationRepository;
         this.prescriptionRepository = prescriptionRepository;
         this.surgeryRepository = surgeryRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     @Transactional
@@ -104,18 +107,21 @@ public class BulkDataSeederService {
         List<Nurse> nurses = generateNurses(nurseCount, allWards);
         results.put("nurses", nurses.size());
 
-        // Generate patients (distributed across hospitals and wards)
-        List<Patient> patients = generatePatients(patientCount, hospitals, allWards);
-        results.put("patients", patients.size());
-
         // Generate medications
         List<Medication> medications = generateMedications();
         medicationRepository.saveAll(medications);
         results.put("medications", medications.size());
 
         // Generate diagnoses
-        List<Diagnosis> diagnoses = generateDiagnoses(patients.size() / 2, patients, doctors);
+        List<Diagnosis> diagnoses = generateDiagnoses(patientCount/ 2, doctors);
         results.put("diagnoses", diagnoses.size());
+
+        // Generate patients (distributed across hospitals and wards)
+        List<Patient> patients = generatePatients(patientCount, hospitals, allWards, diagnoses);
+        results.put("patients", patients.size());
+
+        List<Appointment> appointments = generateAppointments(patients, doctors, nurses);
+        results.put("appointments", appointments.size());
 
         // Generate prescriptions
         List<Prescription> prescriptions = generatePrescriptions(
@@ -128,6 +134,28 @@ public class BulkDataSeederService {
         results.put("surgeries", surgeries.size());
 
         return results;
+    }
+
+    private List<Appointment> generateAppointments(List<Patient> patients , List<Doctor> doctors, List<Nurse> nurses) {
+        List<Appointment> appointments = new ArrayList<>();
+        for (Patient patient : patients) {
+            int appointmentCount = ThreadLocalRandom.current().nextInt(4);
+            for (int i = 0; i < appointmentCount; i++) {
+                Appointment appointment = new Appointment();
+                appointment.setAppointmentId(UUID.randomUUID());
+                appointment.setPatient(patient);
+                appointment.setDoctor(doctors.get(ThreadLocalRandom.current().nextInt(doctors.size())));
+                appointment.setNurse(nurses.get(ThreadLocalRandom.current().nextInt(nurses.size())));
+                appointment.setStatus(getRandomEnum(AppointmentStatusType.class));
+                appointments.add(appointment);
+
+                LocalDate appointmentDate = LocalDate.now().plusDays(ThreadLocalRandom.current().nextInt(30));
+                appointment.setAppointmentDate(appointmentDate);
+
+                appointments.add(appointment);
+            }
+        }
+        return appointmentRepository.saveAll(appointments);
     }
 
     private List<Hospital> generateHospitals(int count) {
@@ -243,7 +271,7 @@ public class BulkDataSeederService {
         return nurseRepository.saveAll(nurses);
     }
 
-    private List<Patient> generatePatients(int count, List<Hospital> hospitals, List<Ward> wards) {
+    private List<Patient> generatePatients(int count, List<Hospital> hospitals, List<Ward> wards, List<Diagnosis> diagnoses) {
         List<Patient> patients = new ArrayList<>();
         String[] genders = {"Male", "Female", "Other"};
 
@@ -272,7 +300,15 @@ public class BulkDataSeederService {
                 Ward ward = hospitalWards.get(ThreadLocalRandom.current().nextInt(hospitalWards.size()));
                 patient.setWard(ward);
             }
-            
+
+                Set<Diagnosis> patientDiagnoses = new HashSet<>();
+                int diagnosesPerPatient = ThreadLocalRandom.current().nextInt(4);
+                for (int j = 0; j < diagnosesPerPatient; j++) {
+                    Diagnosis diagnosis = diagnoses.get(ThreadLocalRandom.current().nextInt(diagnoses.size()));
+                    patientDiagnoses.add(diagnosis);
+                }
+                patient.setDiagnosis(patientDiagnoses);
+
             patients.add(patient);
         }
 
@@ -300,7 +336,7 @@ public class BulkDataSeederService {
         return medications;
     }
 
-    private List<Diagnosis> generateDiagnoses(int count, List<Patient> patients, List<Doctor> doctors) {
+    private List<Diagnosis> generateDiagnoses(int count, List<Doctor> doctors) {
         String[] diagnoses = {
             "Hypertension", "Diabetes Type 2", "Common Cold", "Bronchitis", "Pneumonia",
             "Asthma", "Arthritis", "Migraine", "Anxiety", "Depression", "Insomnia",
@@ -314,15 +350,7 @@ public class BulkDataSeederService {
             diagnosis.setDescription(diagnoses[ThreadLocalRandom.current().nextInt(diagnoses.length)]);
             diagnosis.setDiagnosisDate(LocalDate.now().minusDays(ThreadLocalRandom.current().nextInt(365)));
             diagnosis.setDoctor(doctors.get(ThreadLocalRandom.current().nextInt(doctors.size())));
-            
-            // Set patients (1-3 random patients per diagnosis)
-            Set<Patient> diagnosisPatients = new HashSet<>();
-            int patientCount = ThreadLocalRandom.current().nextInt(1, Math.min(4, patients.size() + 1));
-            for (int j = 0; j < patientCount; j++) {
-                diagnosisPatients.add(patients.get(ThreadLocalRandom.current().nextInt(patients.size())));
-            }
-            diagnosis.setPatients(diagnosisPatients);
-            
+
             diagnosisList.add(diagnosis);
         }
 
@@ -379,6 +407,11 @@ public class BulkDataSeederService {
         String firstName = FIRST_NAMES[ThreadLocalRandom.current().nextInt(FIRST_NAMES.length)];
         String lastName = LAST_NAMES[ThreadLocalRandom.current().nextInt(LAST_NAMES.length)];
         return firstName + " " + lastName;
+    }
+
+    private <T extends Enum<?>> T getRandomEnum(Class<T> enumClass) {
+        T[] enumConstants = enumClass.getEnumConstants();
+        return enumConstants[random.nextInt(enumConstants.length)];
     }
 }
 
